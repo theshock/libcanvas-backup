@@ -3,6 +3,8 @@ LibCanvas
 
 LibCanvas is a free javascript library, based on MooTools and available under LGPL License. This library gives the developer a lot of tools for creating web applications & games by expanding canvas-2d context existing methods and providing new ones. There are tools for work with mouse events, such interfaces as draggable and droppable, class for easy image preloading and so on.
 
+![Logo](http://funkyimg.com/u2/608/884/libcanvas-logo.png)
+
 How to use
 ----------
 
@@ -39,8 +41,8 @@ green when hovered and red in normal state.
 Screenshots
 -----------
 
-![Asteroids game built with LibCanvas](http://libcanvas.com/files/images/asteroids-screenshot-small.jpg)
-![Basic user interface](http://libcanvas.com/files/images/demos/ui-droppable.png)
-![Extended user interface](http://libcanvas.com/files/images/demos/de.png)
+!["Asteroids" game built with LibCanvas](http://funkyimg.com/u2/964/114/lc-screen-1.jpg)
+
+![Solitaire built with LibCanvas](http://funkyimg.com/u2/964/114/lc-screen-2.jpg)
+
 ![Pseudo-vector editor built with LibCanvas](http://libcanvas.com/files/images/demos/path-builder.png)
-![The solar system model built with LibCanvas](http://libcanvas.com/files/images/solar.png)
