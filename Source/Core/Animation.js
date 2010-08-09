@@ -1,3 +1,15 @@
+/*
+---
+description: Provides basic animation for sprites
+
+license: LGPL
+
+authors:
+- Pavel Ponomarenko aka Shock <shocksilien@gmail.com>
+
+provides: [LibCanvas.Animation]
+*/
+
 LibCanvas.Animation = new Class({
 	Implements : [LibCanvas.Interfaces.Bindable],
 
