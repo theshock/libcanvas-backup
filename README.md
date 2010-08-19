@@ -1,7 +1,7 @@
 LibCanvas
 =========
 
-LibCanvas is a free javascript library, based on MooTools and available under LGPL License. This library gives the developer a lot of tools for creating web applications & games by expanding canvas-2d context existing methods and providing new ones. There are tools for work with mouse events, such interfaces as draggable and droppable, class for easy image preloading and so on.
+LibCanvas is a free javascript library, based on MooTools and available under LGPL License. This library gives the developer a lot of tools for creating web applications & games by expanding canvas-2d context existing methods and providing new ones. There are tools for work with mouse events, such Behaviors as draggable and droppable, class for easy image preloading and so on.
 
 ![Logo](http://funkyimg.com/u2/608/884/libcanvas-logo.png)
 
@@ -13,14 +13,14 @@ Also, this object receives mouse events and changes its color depending on curre
 green when hovered and red in normal state.
 
 	Interface.Shape = new Class({
-	   Extends : LibCanvas.Interfaces.Drawable,
+	   Extends : LibCanvas.Behaviors.Drawable,
 	   Implements : [
-		  LibCanvas.Interfaces.MouseListener,
-		  LibCanvas.Interfaces.Draggable,
-		  LibCanvas.Interfaces.Clickable,
-		  LibCanvas.Interfaces.Linkable,
-		  LibCanvas.Interfaces.Moveable,
-		  LibCanvas.Interfaces.Droppable
+		  LibCanvas.Behaviors.MouseListener,
+		  LibCanvas.Behaviors.Draggable,
+		  LibCanvas.Behaviors.Clickable,
+		  LibCanvas.Behaviors.Linkable,
+		  LibCanvas.Behaviors.Moveable,
+		  LibCanvas.Behaviors.Droppable
 	   ],
 	   getStyle : function () {
 		  return (this.active && { fill : "#99f", stroke : "#006"})
