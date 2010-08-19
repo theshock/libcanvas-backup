@@ -14,7 +14,7 @@ requires:
 */
 
 LibCanvas.Animation = new Class({
-	Implements : [LibCanvas.Interfaces.Bindable],
+	Implements : [LibCanvas.Behaviors.Bindable],
 
 	sprites : {},
 	addSprite : function (index, sprite) {
