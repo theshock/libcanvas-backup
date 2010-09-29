@@ -23,15 +23,15 @@ LibCanvas.Shape = new Class({
 	checkPoint : function (args) {
 		if (args instanceof LibCanvas.Point) {
 			return args;
-		} else if (args.length == 2) {
-			return new LibCanvas.Point(args);
 		} else if (args[0] instanceof LibCanvas.Point) {
 			return args[0];
 		} else {
-			throw 'Not a LibCanvas.Point in LibCanvas.Shape.checkPoint';
+			return new LibCanvas.Point(args);
 		}
 	},
 	move : function (distance) {
+		this.bind('move', [distance]);
+		// @depracated
 		this.bind('moved', [distance]);
 		return this;
 	},
