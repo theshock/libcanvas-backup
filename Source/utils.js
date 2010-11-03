@@ -84,7 +84,7 @@ Number.implement({
 	}
 });
 
-[0, 45, 90, 135, 180, 270, 360].each(function (degree) {
+[0, 45, 90, 135, 180, 225, 270, 315, 360].each(function (degree) {
 	degreesCache[degree] = degree.degree();
 });
 
@@ -119,6 +119,9 @@ String.implement({
 	begins: function (w, caseInsensitive) {
 		return (caseInsensitive) ? w == this.substr(0, w.length) :
 			w.toLowerCase() == this.substr(0, w.length).toLowerCase();
+	},
+	ucfirst : function () {
+		return this.charAt(0).toUpperCase() + this.substr(1);
 	}
 });
 

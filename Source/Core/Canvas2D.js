@@ -24,21 +24,30 @@ LibCanvas.Canvas2D = new Class({
 		LibCanvas.Behaviors.Bindable
 	],
 
-	fps      : 20,
-	autoDraw : true,
-	interval : null,
+	fps        : 20,
+	autoUpdate : true,
+	interval   : null,
 
-	initialize : function (elem) {
+	initialize : function (elem, cfg) {
 		this.origElem = elem;
 		this.origCtx  = elem.getContext('2d-libcanvas');
 
-		this.elem = this.createBuffer();
-		this.ctx  = this.elem.getContext('2d-libcanvas');
+		if (cfg && cfg.backBuffer == 'off') {
+			this.elem = this.origElem;
+			this.ctx  = this.origCtx;
+		} else {
+			this.elem = this.createBuffer();
+			this.ctx  = this.elem.getContext('2d-libcanvas');
+		}
 	},
 
 	updateFrame : true,
 	update : function () {
-		this.updateFrame = true;
+		if (this.autoUpdate == 'onRequest') {
+			this.updateFrame = true;
+		} else {
+			this.frame();
+		}
 		return this;
 	},
 
@@ -60,6 +69,11 @@ LibCanvas.Canvas2D = new Class({
 			LibCanvas.Buffer, arguments.length ?
 				arguments : [this.origElem.width, this.origElem.height]
 		);
+	},
+	createGrip : function (config) {
+		var grip = new LibCanvas.Ui.Grip(this, config);
+		this.addElement(grip);
+		return grip;
 	},
 
 	// post-/pre- procesing

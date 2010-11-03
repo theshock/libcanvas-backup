@@ -156,7 +156,7 @@ LibCanvas.Context2D = new Class({
 			this.canvas = canvas;
 			this.ctx2d  = canvas.getOriginalContext('2d');
 		}
-		// We shouldn't think about size, LibCanvas should think
+		// todo : remove
 		this.width  = this.canvas.width;
 		this.height = this.canvas.height;
 	},
@@ -171,6 +171,17 @@ LibCanvas.Context2D = new Class({
 			throw e;
 		}
 		return this;
+	},
+	getClone : function (width, height) {
+		var canvas = this.canvas;
+		var clone  = LibCanvas.Buffer(
+			width  || canvas.width,
+			height || canvas.height
+		);
+		var ctx = clone.getContext('2d');
+		!arguments.length ? ctx.drawImage(canvas, 0, 0) :
+			ctx.drawImage(canvas, 0, 0, width, height);
+		return clone;
 	},
 
 	// All
@@ -290,11 +301,19 @@ LibCanvas.Context2D = new Class({
 		return this.original('quadraticCurveTo', arguments);
 	},
 	bezierCurveTo : function () {
-		// @todo Beauty arguments
-		if (arguments.length == 6) {
+		var a = arguments;
+		if (a.length == 6) {
 			return this.original('bezierCurveTo', arguments);
 		} else {
-			var a = arguments[0];
+			if (a.length == 3) {
+				a = {
+					to : a[2],
+					p1 : a[0],
+					p2 : a[1]
+				};
+			} else {
+				a = a[0];
+			}
 			return this.original('bezierCurveTo', [
 				a.p1.x, a.p1.y, a.p2.x, a.p2.y, a.to.x, a.to.y
 			]);
@@ -403,14 +422,13 @@ LibCanvas.Context2D = new Class({
 		if (cfg.overflow == 'hidden') {
 			clip();
 		}
-
 		var xGet = function (lineWidth) {
 			var x;
 			if (cfg.align == 'left') {
-				x = to.from.x + cfg.padding[0];
+				x = to.from.x + cfg.padding[1];
 			} else {
 				if (cfg.align == 'right') {
-					x = to.to.x - lineWidth - cfg.padding[0];
+					x = to.to.x - lineWidth - cfg.padding[1];
 				} else /* cfg.align == 'center' */ {
 					x = to.from.x + (to.getWidth() - lineWidth)/2;
 				}
@@ -430,7 +448,7 @@ LibCanvas.Context2D = new Class({
 						x = to.from.x + (to.getWidth() - lineWidth)/2;
 					}
 				}
-				this.fillText(line, xGet(cfg.align == 'left' ? 0 : this.measureText(line).width), to.from.y + (i+1)*lh);
+				this.fillText(line, xGet(cfg.align == 'left' ? 0 : this.measureT2ext(line).width), to.from.y + (i+1)*lh);
 			}.bind(this));
 		} else {
 			var lNum = 0;
@@ -449,13 +467,13 @@ LibCanvas.Context2D = new Class({
 						Lw += wordWidth;
 						L  += text;
 					} else if (Lw) {
-						this.fillText(L, xGet(Lw), to.from.y + (++lNum)*lh + cfg.padding[1]);
+						this.fillText(L, xGet(Lw), to.from.y + (++lNum)*lh + cfg.padding[0]);
 						L  = '';
 						Lw = 0;
 					}
 				}
 				if (Lw) {
-					this.fillText(L, xGet(Lw), to.from.y + (++lNum)*lh + cfg.padding[1]);
+					this.fillText(L, xGet(Lw), to.from.y + (++lNum)*lh + cfg.padding[0]);
 					L  = '';
 					Lw = 0;
 				}
@@ -659,13 +677,13 @@ LibCanvas.Context2D = new Class({
 	},
 	// this function is only dublicated as original. maybe, i will change them,
 	createLinearGradient : function () {
-		return this.original('createLinearGradient', arguments);
+		return this.ctx2d.createLinearGradient.apply(this.ctx2d, arguments);
 	},
 	createRadialGradient : function () {
-		return this.original('createRadialGradient', arguments);
+		return this.ctx2d.createRadialGradient.apply(this.ctx2d, arguments);
 	},
 	createPattern : function () {
-		return this.original('createPattern', arguments);
+		return this.ctx2d.createPattern.apply(this.ctx2d, arguments);
 	},
 	drawWindow : function () {
 		return this.original('drawWindow', arguments);

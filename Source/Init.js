@@ -16,6 +16,7 @@ window.LibCanvas = {
 	Inner : {
 		Canvas2D : {}
 	},
+	Ui : {},
 	Shapes  : {},
 	Utils   : {},
 	Engines : {
@@ -59,5 +60,20 @@ window.LibCanvas = {
 	LibCanvas.addCanvasContext = function (name, ctx) {
 		newCtxs[name] = ctx;
 		return this;
+	};
+
+	LibCanvas.extract = function (to, what) {
+		var i;
+		for (i in {Shapes : 1, Behaviors : 1, Utils : 1}) {
+			if (!what || what.contains(i)) {
+				$extend(to, LibCanvas[i]);
+			}
+		}
+		for (i in {Point : 1, Animation : 1, Buffer : 1}) {
+			if (!what || what.contains(i)) {
+				to[i] = LibCanvas[i];
+			}
+		}
+		return to;
 	};
 })();

@@ -11,11 +11,12 @@ provides: [LibCanvas.Mouse]
 */
 
 LibCanvas.Mouse = new Class({
-	initialize : function (libcanvas, noTouch) {
+	initialize : function (libcanvas) {
 		this.inCanvas = false;
 		this.point = new LibCanvas.Point();
 		this.x = null;
 		this.y = null;
+		this.scaleData = {x:1, y:1};
 
 		//noTouch || this.initTouch();
 
@@ -26,10 +27,19 @@ LibCanvas.Mouse = new Class({
 
 		this.setEvents();
 	},
+	setScale : function (x, y) {
+		this.scaleData = {x:x, y:y};
+		return this;
+	},
+	scale : function (x, y) {
+		this.scaleData.x *= x;
+		this.scaleData.y *= y;
+		return this;
+	},
 	setCoords : function (x, y) {
 		if (arguments.length == 2) {
-			this.x = x;
-			this.y = y;
+			this.x = x / this.scaleData.x;
+			this.y = y / this.scaleData.y;
 			this.inCanvas = true;
 		} else {
 			this.x = null;
@@ -39,7 +49,14 @@ LibCanvas.Mouse = new Class({
 		this.point.set(this.x, this.y);
 		return this;
 	},
-	getOffset : function(elem) {
+	getOffset : function (e) {
+		if (e.event) e = e.event;
+		if (!e.offset) {
+			this.expandEvent(e);
+		}
+		return e.offset;
+	},
+	createOffset : function(elem) {
 		var top = 0, left = 0;
 		if (elem.getBoundingClientRect) {
 			var box = elem.getBoundingClientRect();
@@ -73,46 +90,42 @@ LibCanvas.Mouse = new Class({
 	expandEvent : function (e) {
 		var event = new Event(e);
 		if (!$chk(e.offsetX)) {
-			var offset = this.getOffset(e.target);
+			var offset = this.createOffset(e.target);
 			e.offsetX = event.page.x - offset.left;
 			e.offsetY = event.page.y - offset.top;
 		}
-		e.offset = {
-			x : e.offsetX,
-			y : e.offsetY
-		};
+		e.offset = new LibCanvas.Point(e.offsetX, e.offsetY);
 		return e;
 	},
 	setEvents : function () {
-		var mouse  = this;
-		var exp = function (e) {
-			return mouse.expandEvent(e.event);
-		};
+		var mouse = this;
 		$(this.elem).addEvents({
 			/* bug in Linux Google Chrome 5.0.356.0 dev
 			 * if moving mouse while some text is selected
 			 * mouse becomes disable.
 			 */
 			mousemove : function (e) {
-				e = exp(e);
-				mouse.setCoords(e.offsetX, e.offsetY);
-				mouse.events.event('mousemove', e);
+				var offset = mouse.getOffset(e);
+				mouse.setCoords(offset.x, offset.y);
+				mouse.events.event('mousemove', e.event);
 				mouse.isOut = false;
 				return false;
 			},
 			mouseout : function (e) {
-				e = exp(e);
+				mouse.getOffset(e);
 				mouse.setCoords(/* null */);
-				mouse.events.event('mouseout', e);
+				mouse.events.event('mouseout', e.event);
 				mouse.isOut = true;
 				return false;
 			},
 			mousedown : function (e) {
-				mouse.events.event('mousedown', exp(e));
+				mouse.getOffset(e);
+				mouse.events.event('mousedown', e.event);
 				return false;
 			},
 			mouseup : function (e) {
-				mouse.events.event('mouseup'  , exp(e));
+				mouse.getOffset(e);
+				mouse.events.event('mouseup'  , e.event);
 				return false;
 			}
 		});
